@@ -9,13 +9,21 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
-#List View
-def list_books(request):
-    books = Book.objects.all()
-    return render(request, "relationship_app/list_books.html", {"books": books})
-
 from django.views.generic.detail import DetailView
 from .models import Library
+from .forms import BookSearchForm
+
+#List View
+def list_books(request):
+    form = BookSearchForm(request.GET or None)
+    books = Book.objects.all()
+
+    if form.is_valid():
+        query = form.cleaned_data['query']
+        books = books.filter(title__icontains=query)
+    return render(request, "relationship_app/list_books.html", {"books": books, "form": form})
+
+
 
 #Detailed View
 class LibraryDetailView(DetailView):
