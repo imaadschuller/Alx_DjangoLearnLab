@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.detail import DetailView
 from .models import Library
 from .forms import BookSearchForm
-
+from .forms import ExampleForm
 #List View
 def list_books(request):
     form = BookSearchForm(request.GET or None)
