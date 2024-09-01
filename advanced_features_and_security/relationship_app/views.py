@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import Book
-from .forms import BookForm
+from ..LibraryProject.bookshelf.forms import BookForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
+from django import forms
 #List View
 def list_books(request):
     books = Book.objects.all()
@@ -17,11 +18,21 @@ def list_books(request):
 from django.views.generic.detail import DetailView
 from .models import Library
 
+def search_books(request):
+    query = request.GET.get("q")
+    if query:
+        books = Book.objects.filter(title__icontains=query)
+    else:
+        books = Book.objects.all()
+        return render(request, "templates/list_books.html", {'books': books})
+
+
 #Detailed View
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
+
 
 # User Registration View
 def register(request):
