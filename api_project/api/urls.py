@@ -7,5 +7,6 @@ router = DefaultRouter()
 router.register(r"books", BookViewSet)
 
 urlpatterns = [
+    path("", include(router.urls)),
     path("books/", BookList.as_view(), name="book-list"),
 ]
