@@ -1,0 +1,2 @@
+import rest_framework
+print(rest_framework.version_info)
