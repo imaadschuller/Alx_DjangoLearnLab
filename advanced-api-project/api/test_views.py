@@ -6,6 +6,10 @@ from .models import Book, Author
 class BookAPITestCase(APITestCase):
 
     def setUp(self):
+
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username="testuser", password="testpass")
+        
         self.author = Author.objects.create(name="George Orwell")
         self.book = Book.objects.create(
             title="1984", publication_year=1949, author=self.author
