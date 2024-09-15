@@ -27,7 +27,7 @@ def register(request):
     else:
         form = UserCreationForm()
 
-    return render(request, "blog/registration/register.html", {"form": form})
+    return render(request, "registration/register.html", {"form": form})
 
 # Home Page
 def home(request):
@@ -47,4 +47,4 @@ def profile(request):
     else:
         form = UserChangeForm(instance=request.user)
 
-    return render(request, "registration/profile.html", {"form": form})
+    return render(request, "templates/profile.html", {"form": form})
