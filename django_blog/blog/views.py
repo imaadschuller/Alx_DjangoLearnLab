@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import Post, Comment
 from .forms import CommentForm
 from django.db.models import Q
+from taggit.models import Tag
 
 # Custom Registration Form with Auto-Login
 def custom_register(request):
@@ -144,3 +145,17 @@ def search_posts(request):
     else:
         posts = Post.objects.none()
     return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list_by_tag.html'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        return Post.objects.filter(tags__slug=tag_slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag_slug = self.kwargs.get('tag_slug')
+        context['tag'] = Tag.objects.get(slug=tag_slug)
+        return context
