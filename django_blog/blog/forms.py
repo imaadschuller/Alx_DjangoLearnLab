@@ -31,7 +31,7 @@ class PostForm(forms.ModelForm):
         fields = ['title', 'content', 'tags']
 
     tags = forms.CharField(
-        widget=TagWidget(),
+        widgets=TagWidget(),
         required=False
     )
 
