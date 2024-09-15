@@ -3,6 +3,14 @@
 <h1>{{ object.title }}</h1>
 <p>{{ object.content }}</p>
 
+<p>Tags:
+    {% for tag in object.tags.all %}
+        <a href="{% url 'tag-detail' tag.name %}">{{ tag.name }}</a>
+    {% empty %}
+        No tags
+    {% endfor %}
+</p>
+
 <!-- Existing post edit/delete links -->
 <a href="{% url 'post-update' object.pk %}">Edit</a>
 <a href="{% url 'post-delete' object.pk %}">Delete</a>

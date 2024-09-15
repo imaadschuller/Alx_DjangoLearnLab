@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404, redirect
 from .models import Post, Comment
 from .forms import CommentForm
+from django.db.models import Q
 
 # Custom Registration Form with Auto-Login
 def custom_register(request):
@@ -114,7 +115,7 @@ def CommentUpdateView(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     if request.user != comment.author:
         return redirect('post-detail', pk=comment.post.id)
-    
+
     if request.method == 'POST':
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
@@ -122,7 +123,7 @@ def CommentUpdateView(request, comment_id):
             return redirect('post-detail', pk=comment.post.id)
     else:
         form = CommentForm(instance=comment)
-    
+
     return render(request, 'blog/edit_comment.html', {'form': form, 'comment': comment})
 
 @login_required
@@ -133,3 +134,13 @@ def CommentDeleteView(request, comment_id):
         comment.delete()
         return redirect('post-detail', pk=post_id)
     return redirect('post-detail', pk=comment.post.id)
+
+def search_posts(request):
+    query = request.GET.get("q")
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) | Q(conent__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct()
+    else:
+        posts = Post.objects.none()
+    return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
