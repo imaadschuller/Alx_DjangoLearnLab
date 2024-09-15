@@ -2,7 +2,39 @@
 {% block content %}
 <h1>{{ object.title }}</h1>
 <p>{{ object.content }}</p>
+
+<!-- Existing post edit/delete links -->
 <a href="{% url 'post-update' object.pk %}">Edit</a>
 <a href="{% url 'post-delete' object.pk %}">Delete</a>
 <a href="{% url 'post-list' %}">Back to List</a>
+
+<!-- Comments section -->
+<h2>Comments</h2>
+{% if object.comments.all %}
+    {% for comment in object.comments.all %}
+    <div>
+        <p><strong>{{ comment.author.username }}</strong> ({{ comment.created_at }}):</p>
+        <p>{{ comment.content }}</p>
+        {% if comment.author == user %}
+        <a href="{% url 'comment-edit' comment.id %}">Edit</a>
+        <a href="{% url 'comment-delete' comment.id %}">Delete</a>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p>No comments yet.</p>
+    {% endfor %}
+{% endif %}
+
+<!-- Add comment form -->
+{% if user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="post" action="{% url 'comment-add' object.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Comment</button>
+    </form>
+{% else %}
+    <p>You must be logged in to add a comment.</p>
+{% endif %}
+
 {% endblock %}
