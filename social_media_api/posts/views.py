@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import generics
 from rest_framework import viewsets, permissions
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
@@ -49,7 +50,7 @@ class FeedViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
 
     if created:
