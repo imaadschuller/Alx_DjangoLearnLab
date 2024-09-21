@@ -4,11 +4,11 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from .serializers import RegisterSerializer, LoginSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from .models import CustomUser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import permissions
-from .views import permission_classes
+
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
