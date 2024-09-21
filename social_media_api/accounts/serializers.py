@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ValidationError
 
-User = get_user_model()
+User = get_user_model().objects.create_user
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,8 +29,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             return user
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True)
+    username = serializers.CharField()
+    password = serializers.CharField()
 
     def validate(self, data):
         user = User.objects.filter(username=data['username']).first()
