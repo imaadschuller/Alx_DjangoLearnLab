@@ -31,15 +31,15 @@ class LoginView(generics.GenericAPIView):
         return Response({"token": token.key}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def follow_user(request, user_id):
-    user_to_follow = CustomUser.objects.get(id=user_id)
+    user_to_follow = CustomUser.objects.all().get(id=user_id)
     request.user.following.add(user_to_follow)
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def unfollow_user(request, user_id):
-    user_to_unfollow = CustomUser.objects.get(id=user_id)
+    user_to_unfollow = CustomUser.objects.all().get(id=user_id)
     request.user.following.remove(user_to_unfollow)
     return Response(status=status.HTTP_200_OK)
